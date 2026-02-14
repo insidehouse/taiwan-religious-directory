@@ -43,3 +43,6 @@ next-env.d.ts
 .worktrees/
 playwright-report/
 test-results/
+
+data/raw/*.jsonl
+data/processed/*.jsonl
