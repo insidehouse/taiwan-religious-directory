@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import FavoriteButton from '@/components/places/FavoriteButton'
 import { getPublishedPlaceBySlug, getPublishedPlaces } from '@/lib/queries/searchPlaces'
@@ -7,8 +8,31 @@ type PlaceDetailPageProps = {
   params: Promise<{ slug: string }>
 }
 
+function baseUrl(): string {
+  return process.env.NEXT_PUBLIC_BASE_URL ?? 'https://kaohsiung-religious-directory.example'
+}
+
 export async function generateStaticParams() {
   return getPublishedPlaces().map((place) => ({ slug: place.slug }))
+}
+
+export async function generateMetadata({ params }: PlaceDetailPageProps): Promise<Metadata> {
+  const { slug } = await params
+  const place = getPublishedPlaceBySlug(slug)
+
+  if (!place) {
+    return {
+      title: '場所不存在 | 高雄宗教場所目錄',
+    }
+  }
+
+  return {
+    title: `${place.name} - ${place.district} | 高雄宗教場所目錄`,
+    description: `${place.name} 位於 ${place.address}，宗教類型為 ${place.religion_type}。`,
+    alternates: {
+      canonical: `${baseUrl()}/places/${place.slug}`,
+    },
+  }
 }
 
 export default async function PlaceDetailPage({ params }: PlaceDetailPageProps) {
