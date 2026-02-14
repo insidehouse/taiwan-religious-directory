@@ -37,6 +37,14 @@ function parsePositiveInt(value: string | null, fallback: number): number {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback
 }
 
+export function getPublishedPlaces(): PlacePublish[] {
+  return MOCK_PLACES.filter((place) => place.publish_status === 'published')
+}
+
+export function getPublishedPlaceBySlug(slug: string): PlacePublish | undefined {
+  return getPublishedPlaces().find((place) => place.slug === slug)
+}
+
 export async function searchPlaces(params: URLSearchParams) {
   const district = params.get('district')?.trim() ?? ''
   const religionType = params.get('religion_type')?.trim() ?? ''
@@ -44,7 +52,7 @@ export async function searchPlaces(params: URLSearchParams) {
   const page = parsePositiveInt(params.get('page'), 1)
   const pageSize = parsePositiveInt(params.get('pageSize'), 20)
 
-  let filtered = MOCK_PLACES.filter((place) => place.publish_status === 'published')
+  let filtered = getPublishedPlaces()
 
   if (district) {
     filtered = filtered.filter((place) => place.district === district)
