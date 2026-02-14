@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import FavoriteButton from '@/components/places/FavoriteButton'
 import { getPublishedPlaceBySlug, getPublishedPlaces } from '@/lib/queries/searchPlaces'
 import { toPlaceStructuredData } from '@/lib/seo/placeStructuredData'
 
@@ -31,6 +32,7 @@ export default async function PlaceDetailPage({ params }: PlaceDetailPageProps) 
       <p>{place.address}</p>
       <p>{place.district}</p>
       <p>宗教類型：{place.religion_type}</p>
+      <FavoriteButton placeId={place.id} currentPath={`/places/${place.slug}`} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
     </main>
   )
