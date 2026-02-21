@@ -25,6 +25,8 @@ export const PlacePublishSchema = z.object({
   source_confidence: z.number().min(0).max(1),
   updated_at: z.string(),
   publish_status: PublishStatusSchema,
+  deity_name: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
 })
 
 export type PlacePublish = z.infer<typeof PlacePublishSchema>

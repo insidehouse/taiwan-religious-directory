@@ -1,35 +1,7 @@
 import type { PlacePublish } from '@/lib/domain/place'
+import placesData from '@/data/processed/places.json'
 
-const MOCK_PLACES: PlacePublish[] = [
-  {
-    id: '11111111-1111-4111-8111-111111111111',
-    slug: 'zuoying-fengshan-temple',
-    name: '鳳山宮',
-    religion_type: 'taoism',
-    district: '左營區',
-    address: '高雄市左營區明德路 1 號',
-    latitude: 22.682,
-    longitude: 120.295,
-    source_primary: 'outscraper',
-    source_confidence: 0.9,
-    updated_at: '2026-02-14T00:00:00.000Z',
-    publish_status: 'published',
-  },
-  {
-    id: '22222222-2222-4222-8222-222222222222',
-    slug: 'gushan-longde-temple',
-    name: '龍德寺',
-    religion_type: 'buddhism',
-    district: '鼓山區',
-    address: '高雄市鼓山區鼓山二路 88 號',
-    latitude: 22.627,
-    longitude: 120.276,
-    source_primary: 'moi',
-    source_confidence: 0.85,
-    updated_at: '2026-02-14T00:00:00.000Z',
-    publish_status: 'published',
-  },
-]
+const ALL_PLACES: PlacePublish[] = placesData as PlacePublish[]
 
 function parsePositiveInt(value: string | null, fallback: number): number {
   if (!value) return fallback
@@ -38,19 +10,31 @@ function parsePositiveInt(value: string | null, fallback: number): number {
 }
 
 export function getPublishedPlaces(): PlacePublish[] {
-  return MOCK_PLACES.filter((place) => place.publish_status === 'published')
+  return ALL_PLACES.filter((place) => place.publish_status === 'published')
 }
 
 export function getPublishedPlaceBySlug(slug: string): PlacePublish | undefined {
   return getPublishedPlaces().find((place) => place.slug === slug)
 }
 
-export async function searchPlaces(params: URLSearchParams) {
-  const district = params.get('district')?.trim() ?? ''
-  const religionType = params.get('religion_type')?.trim() ?? ''
-  const keyword = params.get('keyword')?.trim().toLowerCase() ?? ''
-  const page = parsePositiveInt(params.get('page'), 1)
-  const pageSize = parsePositiveInt(params.get('pageSize'), 20)
+export function getAllDistricts(): string[] {
+  const districts = new Set(getPublishedPlaces().map((p) => p.district))
+  return [...districts].sort()
+}
+
+export function getAllReligionTypes(): string[] {
+  const types = new Set(getPublishedPlaces().map((p) => p.religion_type))
+  return [...types].sort()
+}
+
+export function filterPlaces(options: {
+  district?: string
+  religionType?: string
+  keyword?: string
+  page?: number
+  pageSize?: number
+}) {
+  const { district = '', religionType = '', keyword = '', page = 1, pageSize = 20 } = options
 
   let filtered = getPublishedPlaces()
 
@@ -63,9 +47,10 @@ export async function searchPlaces(params: URLSearchParams) {
   }
 
   if (keyword) {
+    const lowerKeyword = keyword.toLowerCase()
     filtered = filtered.filter((place) => {
-      const haystack = `${place.name} ${place.address}`.toLowerCase()
-      return haystack.includes(keyword)
+      const haystack = `${place.name} ${place.address} ${place.deity_name ?? ''}`.toLowerCase()
+      return haystack.includes(lowerKeyword)
     })
   }
 
