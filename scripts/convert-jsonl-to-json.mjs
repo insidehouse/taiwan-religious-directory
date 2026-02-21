@@ -48,23 +48,12 @@ const lines = readFileSync('data/raw/moi_web_places.jsonl', 'utf-8')
   .trim()
   .split('\n')
 
-const slugCounts = new Map()
-
-function makeSlug(district, name) {
-  const base = `${district}-${name}`
-    .replace(/\s+/g, '-')
-    .replace(/[^\u4e00-\u9fff\w-]/g, '')
-
-  const count = slugCounts.get(base) ?? 0
-  slugCounts.set(base, count + 1)
-
-  return count === 0 ? base : `${base}-${count + 1}`
-}
+let nextId = 1
 
 const places = lines.map((line) => {
   const raw = JSON.parse(line)
   const coords = DISTRICT_COORDS[raw.district] ?? DEFAULT_COORD
-  const slug = makeSlug(raw.district, raw.name)
+  const slug = String(nextId++)
 
   return {
     id: randomUUID(),
