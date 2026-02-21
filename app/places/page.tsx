@@ -63,72 +63,75 @@ export default function PlacesPage() {
   const resetPage = () => setPage(1)
 
   return (
-    <main style={{ maxWidth: 900, margin: '0 auto', padding: '1.5rem' }}>
-      <h1>高雄宗教場所搜尋</h1>
+    <main className="page-main">
+      <h1 className="page-title">搜尋場所</h1>
 
-      <div style={{ display: 'grid', gap: '0.75rem', marginBottom: '1rem' }}>
-        <label>
-          行政區
+      <div className="filter-row mt-lg">
+        <div>
+          <label className="filter-label" htmlFor="district">行政區</label>
           <select
+            id="district"
+            className="filter-select"
             value={district}
             onChange={(e) => { setDistrict(e.target.value); resetPage() }}
-            style={{ display: 'block', width: '100%', padding: '0.4rem', marginTop: '0.25rem' }}
           >
             <option value="">全部</option>
             {districts.map((d) => (
               <option key={d} value={d}>{d}</option>
             ))}
           </select>
-        </label>
+        </div>
 
-        <label>
-          宗教類型
+        <div>
+          <label className="filter-label" htmlFor="religion">宗教類型</label>
           <select
+            id="religion"
+            className="filter-select"
             value={religionType}
             onChange={(e) => { setReligionType(e.target.value); resetPage() }}
-            style={{ display: 'block', width: '100%', padding: '0.4rem', marginTop: '0.25rem' }}
           >
             <option value="">全部</option>
             {religionTypes.map((t) => (
               <option key={t} value={t}>{RELIGION_LABELS[t] ?? t}</option>
             ))}
           </select>
-        </label>
+        </div>
 
-        <label>
-          關鍵字
+        <div>
+          <label className="filter-label" htmlFor="keyword">關鍵字</label>
           <input
+            id="keyword"
+            className="filter-input"
             value={keyword}
             onChange={(e) => { setKeyword(e.target.value); resetPage() }}
-            placeholder="搜尋場所名稱、地址或主祀神明"
-            style={{ display: 'block', width: '100%', padding: '0.4rem', marginTop: '0.25rem' }}
+            placeholder="場所名稱、地址或主祀神明"
           />
-        </label>
+        </div>
       </div>
 
-      <p>共 {filtered.length} 筆結果</p>
+      <p className="result-count">共 {filtered.length.toLocaleString()} 筆結果</p>
 
-      <ul style={{ display: 'grid', gap: '0.75rem', padding: 0, listStyle: 'none' }}>
+      <div className="place-list">
         {paged.map((place) => (
-          <li key={place.id} style={{ border: '1px solid #ddd', borderRadius: 8, padding: '0.75rem' }}>
-            <h2 style={{ margin: 0, fontSize: '1.1rem' }}>
+          <div key={place.id} className="place-card">
+            <div className="place-card-name">
               <Link href={`/places/${place.slug}`}>{place.name}</Link>
-            </h2>
-            <p style={{ margin: '0.25rem 0', color: '#666', fontSize: '0.9rem' }}>
-              {place.district} ・ {RELIGION_LABELS[place.religion_type] ?? place.religion_type}
-              {place.deity_name ? ` ・ ${place.deity_name}` : ''}
-            </p>
-            <p style={{ margin: 0, fontSize: '0.9rem' }}>{place.address}</p>
-          </li>
+            </div>
+            <div className="place-card-meta">
+              {place.district} · {RELIGION_LABELS[place.religion_type] ?? place.religion_type}
+              {place.deity_name ? ` · ${place.deity_name}` : ''}
+            </div>
+            <div className="place-card-address">{place.address}</div>
+          </div>
         ))}
-      </ul>
+      </div>
 
       {totalPages > 1 && (
-        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div className="pagination">
           <button onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1}>
             上一頁
           </button>
-          <span>第 {page} / {totalPages} 頁</span>
+          <span className="pagination-info">第 {page} / {totalPages} 頁</span>
           <button onClick={() => setPage(Math.min(totalPages, page + 1))} disabled={page === totalPages}>
             下一頁
           </button>

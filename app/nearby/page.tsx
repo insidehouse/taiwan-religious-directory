@@ -24,6 +24,12 @@ function haversineDistanceMeters(lat1: number, lon1: number, lat2: number, lon2:
 
 type NearbyResult = PlacePublish & { distanceM: number }
 
+function formatDistance(meters: number): string {
+  return meters < 1000
+    ? `${Math.round(meters)} m`
+    : `${(meters / 1000).toFixed(1)} km`
+}
+
 export default function NearbyPage() {
   const [lat, setLat] = useState('')
   const [lng, setLng] = useState('')
@@ -75,82 +81,53 @@ export default function NearbyPage() {
   }
 
   return (
-    <main style={{ maxWidth: 900, margin: '0 auto', padding: '1.5rem' }}>
-      <h1>附近探索</h1>
+    <main className="page-main">
+      <h1 className="page-title">附近探索</h1>
+      <p className="page-desc">使用目前位置或輸入座標，找出附近的宗教場所。</p>
 
-      <div style={{ display: 'grid', gap: '0.5rem', marginBottom: '1rem' }}>
-        <button
-          onClick={handleLocateMe}
-          disabled={locating}
-          style={{
-            padding: '0.6rem 1rem',
-            background: '#0070f3',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 8,
-            cursor: 'pointer',
-            fontWeight: 600,
-          }}
-        >
+      <div className="mt-lg">
+        <button className="locate-btn" onClick={handleLocateMe} disabled={locating}>
           {locating ? '定位中...' : '使用目前位置'}
         </button>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
-          <label>
-            緯度
-            <input
-              value={lat}
-              onChange={(e) => setLat(e.target.value)}
-              placeholder="22.627"
-              style={{ display: 'block', width: '100%', padding: '0.4rem', marginTop: '0.25rem' }}
-            />
-          </label>
-          <label>
-            經度
-            <input
-              value={lng}
-              onChange={(e) => setLng(e.target.value)}
-              placeholder="120.301"
-              style={{ display: 'block', width: '100%', padding: '0.4rem', marginTop: '0.25rem' }}
-            />
-          </label>
-          <label>
-            半徑（公里）
-            <input
-              value={radiusKm}
-              onChange={(e) => setRadiusKm(e.target.value)}
-              style={{ display: 'block', width: '100%', padding: '0.4rem', marginTop: '0.25rem' }}
-            />
-          </label>
+        <div className="coord-grid">
+          <div>
+            <label className="filter-label" htmlFor="lat">緯度</label>
+            <input id="lat" className="filter-input" value={lat} onChange={(e) => setLat(e.target.value)} placeholder="22.627" />
+          </div>
+          <div>
+            <label className="filter-label" htmlFor="lng">經度</label>
+            <input id="lng" className="filter-input" value={lng} onChange={(e) => setLng(e.target.value)} placeholder="120.301" />
+          </div>
+          <div>
+            <label className="filter-label" htmlFor="radius">半徑（公里）</label>
+            <input id="radius" className="filter-input" value={radiusKm} onChange={(e) => setRadiusKm(e.target.value)} />
+          </div>
         </div>
 
-        <button onClick={handleSearch} style={{ padding: '0.5rem', cursor: 'pointer' }}>
-          搜尋附近場所
-        </button>
+        <button className="search-btn" onClick={handleSearch}>搜尋附近場所</button>
       </div>
 
       {searched && results.length === 0 && (
-        <p>附近沒有找到場所，試試增加搜尋半徑。</p>
+        <p className="result-count mt-lg">附近沒有找到場所，試試增加搜尋半徑。</p>
       )}
 
       {results.length > 0 && (
-        <section>
-          <h2>找到 {results.length} 間場所</h2>
-          <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: '0.75rem' }}>
+        <section className="mt-xl">
+          <h2 className="section-title">找到 {results.length} 間場所</h2>
+          <div className="nearby-list">
             {results.map((place) => (
-              <li key={place.id} style={{ border: '1px solid #ddd', borderRadius: 8, padding: '0.75rem' }}>
-                <h3 style={{ margin: 0 }}>
+              <div key={place.id} className="nearby-card">
+                <div className="nearby-card-name">
                   <Link href={`/places/${place.slug}`}>{place.name}</Link>
-                </h3>
-                <p style={{ margin: '0.25rem 0', color: '#666', fontSize: '0.9rem' }}>
-                  {place.district} ・ 距離 {place.distanceM < 1000
-                    ? `${Math.round(place.distanceM)} 公尺`
-                    : `${(place.distanceM / 1000).toFixed(1)} 公里`}
-                </p>
-                <p style={{ margin: 0, fontSize: '0.9rem' }}>{place.address}</p>
-              </li>
+                </div>
+                <div className="place-card-meta">
+                  {place.district} · <span className="nearby-distance">{formatDistance(place.distanceM)}</span>
+                </div>
+                <div className="place-card-address">{place.address}</div>
+              </div>
             ))}
-          </ul>
+          </div>
         </section>
       )}
     </main>

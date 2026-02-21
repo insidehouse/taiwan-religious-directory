@@ -21,74 +21,36 @@ export default function HomePage() {
   }
 
   return (
-    <main style={{ maxWidth: 900, margin: '0 auto', padding: '1.5rem' }}>
-      <h1>高雄宗教場所目錄</h1>
-      <p style={{ color: '#666', marginTop: '0.5rem' }}>
-        收錄高雄市 {districts.length} 個行政區、共 {places.length} 間宗教場所的公開資料。
+    <main className="page-main">
+      <h1 className="page-title">高雄宗教場所目錄</h1>
+      <p className="page-desc">
+        收錄高雄市 {districts.length} 個行政區、共 {places.length.toLocaleString()} 間宗教場所的公開資料。
       </p>
 
-      <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem', flexWrap: 'wrap' }}>
-        <Link
-          href="/places"
-          style={{
-            display: 'inline-block',
-            padding: '0.75rem 1.5rem',
-            background: '#0070f3',
-            color: '#fff',
-            borderRadius: 8,
-            fontWeight: 600,
-          }}
-        >
-          搜尋場所
-        </Link>
-        <Link
-          href="/nearby"
-          style={{
-            display: 'inline-block',
-            padding: '0.75rem 1.5rem',
-            border: '1px solid #ddd',
-            borderRadius: 8,
-          }}
-        >
-          附近探索
-        </Link>
+      <div className="gap-row mt-lg">
+        <Link href="/places" className="btn-primary">搜尋場所</Link>
+        <Link href="/nearby" className="btn-ghost">附近探索</Link>
       </div>
 
-      <section style={{ marginTop: '2rem' }}>
-        <h2>宗教類型分布</h2>
-        <ul style={{ listStyle: 'none', padding: 0, display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+      <section className="mt-xl">
+        <h2 className="section-title">宗教類型分布</h2>
+        <div className="stat-grid">
           {[...religionCounts.entries()]
             .sort((a, b) => b[1] - a[1])
             .map(([type, count]) => (
-              <li
-                key={type}
-                style={{
-                  padding: '0.4rem 0.8rem',
-                  background: '#f5f5f5',
-                  borderRadius: 6,
-                  fontSize: '0.9rem',
-                }}
-              >
-                {RELIGION_LABELS[type] ?? type} {count}
-              </li>
+              <span key={type} className="stat-chip">
+                {RELIGION_LABELS[type] ?? type}
+                <span className="stat-chip-count">{count.toLocaleString()}</span>
+              </span>
             ))}
-        </ul>
+        </div>
       </section>
 
-      <section style={{ marginTop: '2rem' }}>
-        <h2>行政區</h2>
-        <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+      <section className="mt-xl">
+        <h2 className="section-title">行政區</h2>
+        <div className="district-grid">
           {districts.map((d) => (
-            <Link
-              key={d}
-              href={`/places?district=${encodeURIComponent(d)}`}
-              style={{
-                padding: '0.3rem 0.6rem',
-                border: '1px solid #ddd',
-                borderRadius: 6,
-                fontSize: '0.85rem',
-              }}
-            >
+            <Link key={d} href={`/places?district=${encodeURIComponent(d)}`} className="district-link">
               {d}
             </Link>
           ))}

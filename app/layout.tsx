@@ -1,17 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "高雄宗教場所目錄",
@@ -25,21 +14,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-Hant">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <nav style={{
-          borderBottom: '1px solid #eee',
-          padding: '0.75rem 1.5rem',
-          display: 'flex',
-          gap: '1.5rem',
-          alignItems: 'center',
-          maxWidth: 900,
-          margin: '0 auto',
-        }}>
-          <Link href="/" style={{ fontWeight: 700 }}>首頁</Link>
-          <Link href="/places">搜尋場所</Link>
-          <Link href="/nearby">附近探索</Link>
+      <body>
+        <nav className="site-nav">
+          <div className="site-nav-inner">
+            <Link href="/" className="site-nav-brand">高雄宗教場所目錄</Link>
+            <Link href="/places" className="site-nav-link">搜尋場所</Link>
+            <Link href="/nearby" className="site-nav-link">附近探索</Link>
+          </div>
         </nav>
         {children}
+        <footer className="site-footer">
+          <span>資料來源：內政部全國宗教資訊系統</span>
+          <span>insidehouse</span>
+        </footer>
       </body>
     </html>
   );

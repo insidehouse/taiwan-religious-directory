@@ -52,36 +52,34 @@ export default async function PlaceDetailPage({ params }: PlaceDetailPageProps) 
   })
 
   return (
-    <main style={{ maxWidth: 900, margin: '0 auto', padding: '1.5rem' }}>
-      <Link href="/places" style={{ color: '#0070f3', fontSize: '0.9rem' }}>
-        ← 返回列表
-      </Link>
+    <main className="page-main">
+      <Link href="/places" className="back-link">← 返回列表</Link>
 
-      <h1 style={{ marginTop: '0.75rem' }}>{place.name}</h1>
+      <h1 className="page-title mt-md">{place.name}</h1>
 
-      <dl style={{ display: 'grid', gap: '0.5rem', marginTop: '1rem' }}>
-        <div>
-          <dt style={{ fontWeight: 600, fontSize: '0.85rem', color: '#666' }}>地址</dt>
-          <dd style={{ margin: 0 }}>{place.address}</dd>
+      <dl className="detail-grid">
+        <div className="detail-item">
+          <dt className="detail-label">地址</dt>
+          <dd className="detail-value">{place.address}</dd>
         </div>
-        <div>
-          <dt style={{ fontWeight: 600, fontSize: '0.85rem', color: '#666' }}>行政區</dt>
-          <dd style={{ margin: 0 }}>{place.district}</dd>
+        <div className="detail-item">
+          <dt className="detail-label">行政區</dt>
+          <dd className="detail-value">{place.district}</dd>
         </div>
-        <div>
-          <dt style={{ fontWeight: 600, fontSize: '0.85rem', color: '#666' }}>宗教類型</dt>
-          <dd style={{ margin: 0 }}>{RELIGION_LABELS[place.religion_type] ?? place.religion_type}</dd>
+        <div className="detail-item">
+          <dt className="detail-label">宗教類型</dt>
+          <dd className="detail-value">{RELIGION_LABELS[place.religion_type] ?? place.religion_type}</dd>
         </div>
         {place.deity_name && (
-          <div>
-            <dt style={{ fontWeight: 600, fontSize: '0.85rem', color: '#666' }}>主祀神明</dt>
-            <dd style={{ margin: 0 }}>{place.deity_name}</dd>
+          <div className="detail-item">
+            <dt className="detail-label">主祀神明</dt>
+            <dd className="detail-value">{place.deity_name}</dd>
           </div>
         )}
         {place.phone && (
-          <div>
-            <dt style={{ fontWeight: 600, fontSize: '0.85rem', color: '#666' }}>電話</dt>
-            <dd style={{ margin: 0 }}>{place.phone}</dd>
+          <div className="detail-item">
+            <dt className="detail-label">電話</dt>
+            <dd className="detail-value">{place.phone}</dd>
           </div>
         )}
       </dl>
