@@ -46,3 +46,7 @@ test-results/
 
 data/raw/*.jsonl
 data/processed/*.jsonl
+
+# python
+__pycache__/
+*.pyc
